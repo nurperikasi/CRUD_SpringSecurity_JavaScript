@@ -23,6 +23,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         this.loginSuccessHandler = loginSuccessHandler;
     }
 
+    @Override
+    public void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.inMemoryAuthentication().withUser("ADMIN").password("ADMIN").roles("ADMIN");
+    }
+
     @Autowired
     public void configureGlobalSecurity(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder()); // конфигурация для прохождения аутентификации

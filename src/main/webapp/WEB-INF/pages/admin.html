@@ -10,6 +10,8 @@
         <th>Id</th>
         <th>Name</th>
         <th>Last Name</th>
+        <th>Password</th>
+        <th>Roles</th>
         <th>Actions</th>
     </tr>
     <tr th:each="user, state : ${allUsers}"
@@ -17,6 +19,8 @@
         <td th:utext="${user.id}">Id</td>
         <td th:utext="${user.name}">Name</td>
         <td th:utext="${user.lastName}">Last Name</td>
+        <td th:utext="${Password}">Password</td>
+        <td th:utext="${user.roles}">Last Name</td>
         <td><a th:href="@{/user/update/{id}(id=${user.id})}">Edit</a>
             <a th:href="@{/user/delete/{id}(id=${user.id})}">Delete</a>
         </td>

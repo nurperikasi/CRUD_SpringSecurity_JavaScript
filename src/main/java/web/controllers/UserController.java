@@ -1,6 +1,7 @@
 package web.controllers;
 
 
+import com.sun.org.apache.xpath.internal.operations.Mod;
 import web.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -27,45 +28,50 @@ public class UserController {
     @Autowired
     private UserValidator userValidator;
 
-    @PersistenceContext
-    ModelAndView modelAndView;
+//    @PersistenceContext
+//    ModelAndView modelAndView;
 
 
     @GetMapping("/login")
     public ModelAndView login(){
+        ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("loginPage");
         modelAndView.addObject("userForm", new User());
         return modelAndView;
     }
-
-    @PostMapping("/login")
-    public ModelAndView login(@ModelAttribute("user") User user, BindingResult bindingResult){
-        modelAndView.setViewName("/user");
-        userValidator.validate(user, bindingResult);
-        if (bindingResult.hasErrors()){
-            modelAndView.setViewName("redirect/login");
-        }
-        userService.add(user);
-        securityService.autologin(user.getUsername(),user.getConfirmPassword());
-        return modelAndView;
-    }
-
-    @PostMapping("/admin")
+//
+//    @PostMapping("/login")
+//    public ModelAndView login(@ModelAttribute("user") User user, BindingResult bindingResult){
+//        modelAndView.setViewName("/user");
+//        userValidator.validate(user, bindingResult);
+//        if (bindingResult.hasErrors()){
+//            modelAndView.setViewName("redirect/login");
+//        }
+//        userService.add(user);
+//        securityService.autologin(user.getUsername(),user.getConfirmPassword());
+//        return modelAndView;
+//    }
+//
+    @GetMapping("/admin")
     public ModelAndView admin(){
-        modelAndView.setViewName("/admin");
+        ModelAndView modelAndView = new ModelAndView();
+        List<User> list = userService.allUsers();
+        modelAndView.setViewName("admin");
+        modelAndView.addObject("allUsers", list);
         return modelAndView;
     }
 
     @GetMapping("/user")
     public ModelAndView allUsers() {
-        List<User> list = userService.allUsers();
-        modelAndView.setViewName("usersList");
-        modelAndView.addObject("allUsers", list);
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("user'sPage");
+//        modelAndView.addObject("allUsers", list);
         return modelAndView;
     }
 
     @GetMapping("/update/{id}")
     public ModelAndView updatePage(@PathVariable("id") int id){
+        ModelAndView modelAndView = new ModelAndView();
         System.out.println(id);
         modelAndView.addObject("user", userService.getById(id));
         System.out.println(userService.getById(id));
@@ -75,12 +81,14 @@ public class UserController {
 
     @PostMapping("/update")
     public  ModelAndView updateUser(@ModelAttribute("user") User user){
+        ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("redirect:/user");
         userService.update(user);
         return modelAndView;
     }
     @GetMapping("/addPage")
     public ModelAndView addPage(){
+        ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("user", new User());
         modelAndView.setViewName("addPage");
         return modelAndView;
@@ -88,13 +96,15 @@ public class UserController {
 
     @PostMapping("/add")
     public ModelAndView addUser(@ModelAttribute("user") User user){
+        ModelAndView modelAndView = new ModelAndView();
         userService.add(user);
-        modelAndView.setViewName("redirect:/user");
+        modelAndView.setViewName("redirect:/admin");
         return modelAndView;
     }
 
     @GetMapping("/delete/{id}")
     public ModelAndView deleteUser(@PathVariable("id") int id){
+        ModelAndView modelAndView = new ModelAndView();
         User user = userService.getById(id);
         userService.delete(user);
         modelAndView.setViewName("redirect:/user");
@@ -103,6 +113,7 @@ public class UserController {
 
     @GetMapping("/logout")
     public ModelAndView deleteUser(){
+        ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("loginPage");
         return modelAndView;
     }

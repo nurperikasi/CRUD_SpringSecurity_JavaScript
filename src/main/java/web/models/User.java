@@ -28,9 +28,13 @@ public class User implements UserDetails {
     @Transient
     private String confirmPassword;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinColumn
-    private Set<Role> roles;
+    @ManyToMany(cascade = { CascadeType.ALL })
+    @JoinTable(
+            name = "Users_Roles",
+            joinColumns = { @JoinColumn(name = "user_id") },
+            inverseJoinColumns = { @JoinColumn(name = "role_id") }
+    )
+    private Set<Role> roles = new HashSet<>();
 
     public User() {
     }
@@ -45,6 +49,10 @@ public class User implements UserDetails {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public String getLastName() {
@@ -109,4 +117,6 @@ public class User implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
+
 }

@@ -58,6 +58,8 @@ public class UserController {
         List<User> list = userService.allUsers();
         modelAndView.setViewName("admin");
         modelAndView.addObject("allUsers", list);
+
+        System.out.println(list);
         return modelAndView;
     }
 

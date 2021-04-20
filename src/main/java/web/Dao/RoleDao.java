@@ -1,7 +1,9 @@
 package web.Dao;
 
+import org.springframework.data.repository.CrudRepository;
 import web.models.Role;
-import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface RoleDao extends JpaRepository<Role, Long> {
+public interface RoleDao extends CrudRepository<Role, Long> {
+
+    public Role getOne(Long aLong);
 }

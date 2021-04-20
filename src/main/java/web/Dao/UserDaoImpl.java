@@ -8,9 +8,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Queue;
 import java.util.Set;
 
 @Repository
@@ -25,10 +27,7 @@ public class UserDaoImpl implements UserDao{
 
     @Override
     public List<User> allUsers() {
-        Role role = new Role();
-        role.setRole("admin");
-        entityManager.persist(role);
-        return  entityManager.createQuery("select u from User u", User.class).getResultList();
+        return entityManager.createQuery("select u from User u", User.class).getResultList();
     }
 
     @Override
@@ -36,7 +35,7 @@ public class UserDaoImpl implements UserDao{
         user.setPassword(user.getPassword());
         Set<Role> roles = new HashSet<>();
         roles.add(roleDao.getOne(1L));
-        user.setRoles(roles);
+//        user.setRoles(roles);
         entityManager.persist(user);
     }
 
@@ -59,7 +58,7 @@ public class UserDaoImpl implements UserDao{
 
     @Override
     public User getByName(String name) {
-        TypedQuery<User> query = entityManager.createQuery("select u from User u where u.name=:name",User.class);
+        TypedQuery<User> query = entityManager.createQuery("select u from User u where u.name=:name" ,User.class);
         query.setParameter("name", name);
         return query.getResultList().stream().findAny().orElse(null);
     }

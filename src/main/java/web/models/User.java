@@ -28,16 +28,17 @@ public class User implements UserDetails {
     @Transient
     private String confirmPassword;
 
-    @ManyToMany(cascade = { CascadeType.ALL })
+    @ManyToMany(fetch = FetchType.EAGER, cascade = { CascadeType.ALL })
     @JoinTable(
             name = "Users_Roles",
             joinColumns = { @JoinColumn(name = "user_id") },
             inverseJoinColumns = { @JoinColumn(name = "role_id") }
     )
-    private Set<Role> roles = new HashSet<>();
+    private Set<Role> roles;
 
     public User() {
     }
+
 
     public int getId() {
         return id;
@@ -79,8 +80,18 @@ public class User implements UserDetails {
         return roles;
     }
 
+    public String getRoles1() {
+        return roles.toString().replace("[", "").replace("]", "");
+    }
+
     public void setRoles(Set<Role> roles) {
-        this.roles = new HashSet<>();
+        this.roles = roles;
+    }
+
+    public void setRoles(String role) {
+        Set<Role> roles = new HashSet<>();
+        roles.add(new Role(role));
+        this.roles = roles;
     }
 
     @Override

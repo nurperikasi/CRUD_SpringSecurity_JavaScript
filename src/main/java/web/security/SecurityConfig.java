@@ -25,26 +25,27 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.inMemoryAuthentication().withUser("ADMIN").password("ADMIN").roles("ADMIN");
-        auth.inMemoryAuthentication().withUser("user").password("user").roles("USER");  }
-
-    @Autowired
-    public void configureGlobalSecurity(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder()); // конфигурация для прохождения аутентификации
+        auth
+                .userDetailsService(userDetailsService)
+                .passwordEncoder(passwordEncoder());
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        // http.csrf().disable(); - попробуйте выяснить сами, что это даёт
         http.authorizeRequests()
-                .antMatchers("/").permitAll() // доступность всем
-                .antMatchers("/user").access("hasAnyRole('ROLE_USER')") // разрешаем входить на /user пользователям с ролью User
-                .and().formLogin()  // Spring сам подставит свою логин форму
-                .successHandler(loginSuccessHandler); // подключаем наш SuccessHandler для перенеправления по ролям
+                .antMatchers("/user").hasAnyAuthority("USER", "ADMIN")
+                .antMatchers("/admin").hasAnyAuthority("ADMIN")
+                .anyRequest().authenticated()
+                .and().formLogin().permitAll()
+                .successHandler(loginSuccessHandler)
+                .and().logout().permitAll()
+                .and().exceptionHandling().accessDeniedPage("/403");
+
+        http.csrf().disable();
+        http.headers().frameOptions().disable();
+
     }
 
-    // Необходимо для шифрования паролей
-    // В данном примере не используется, отключен
     @Bean
     public static NoOpPasswordEncoder passwordEncoder() {
         return (NoOpPasswordEncoder) NoOpPasswordEncoder.getInstance();

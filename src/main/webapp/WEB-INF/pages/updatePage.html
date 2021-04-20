@@ -6,7 +6,7 @@
 </head>
 <body>
 <form action="#"
-      th:action="@{/user/update}"
+      th:action="@{/update}"
       th:object="${user}"
       method="post">
     <input type="hidden" name="id"  th:field="*{id}" value="$*{user.id}">
@@ -14,6 +14,9 @@
     <input type="text" th:field="*{name}" id="name">
     <label for="lastName">Last Name</label>
     <input type="text" th:field="*{lastName}" id="lastName">
+    <input type="hidden" name="password"  th:field="*{password}" value="$*{user.password}">
+    <input type="hidden" name="roles"  th:field="*{roles}" value="$*{user.roles}">
+
     <input type="submit" value="Update User">
 </form>
 </body>

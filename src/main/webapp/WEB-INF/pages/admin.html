@@ -1,32 +1,38 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 <head>
     <meta charset="UTF-8">
     <title>Admin</title>
+
 </head>
 <body>
+<h1>Welcome!</h1>
+<h1 th:utext="${user.getUsername()}"> </h1>
 <table border="1">
     <tr>
         <th>Id</th>
         <th>Name</th>
         <th>Last Name</th>
         <th>Roles</th>
-        <th>Actions</th>
+        <th sec:autorize="hasAnyAuthority('ADMIN')">Actions</th>
     </tr>
-    <tr th:each="user, state : ${allUsers}"
-        class="row" th:classappend="${state.odd} ? 'odd-row' : 'even-row'">
+    <tr th:each="user, state : ${allUsers}">
         <td th:utext="${user.id}">Id</td>
         <td th:utext="${user.name}">Name</td>
         <td th:utext="${user.lastName}">Last Name</td>
-        <td> <tr th:each="roles : ${user.roles}"
-                 class="row" th:classappend="${state.odd} ? 'odd-row' : 'even-row'">
-                 <td th:utext = ${roles.name}>Roles</td>
-        <td><a th:href="@{/user/update/{id}(id=${user.id})}">Edit</a>
-            <a th:href="@{/user/delete/{id}(id=${user.id})}">Delete</a>
+        <td th:utext="${user.roles}">Roles</td>
+
+        <td><div sec:authorize="hasAnyAuthority('ADMIN')">
+            <a th:href="@{/update/{id}(id=${user.id})}">Edit</a>
+            <a th:href="@{/delete/{id}(id=${user.id})}">Delete</a>
+        </div>
         </td>
     </tr>
 </table>
-<h2><a href="/user/addPage">Add new user</a></h2>
+<div sec:authorize="hasAnyAuthority('ADMIN')">
+<a href="/addPage">Add new user</a>
+</div>
 <a href="#" th:href="@{/logout}">Log Out</a>
 </body>
 </html>

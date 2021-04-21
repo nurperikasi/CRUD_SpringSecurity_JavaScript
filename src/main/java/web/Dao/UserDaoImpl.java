@@ -10,6 +10,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
+import javax.transaction.Transaction;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Queue;
@@ -26,6 +27,7 @@ public class UserDaoImpl implements UserDao{
     EntityManager entityManager;
 
     @Override
+    @Transactional(readOnly = true)
     public List<User> allUsers() {
         return entityManager.createQuery("select u from User u", User.class).getResultList();
     }
@@ -33,15 +35,13 @@ public class UserDaoImpl implements UserDao{
     @Override
     public void add(User user) {
         user.setPassword(user.getPassword());
-        Set<Role> roles = new HashSet<>();
-        roles.add(roleDao.getOne(1L));
-//        user.setRoles(roles);
+        user.setRoles(user.getRoles());
         entityManager.persist(user);
     }
 
     @Override
     public void delete(User user) {
-        entityManager.remove(user);
+        entityManager.remove(entityManager.contains(user) ? user : entityManager.merge(user));
     }
 
     @Override
@@ -50,6 +50,7 @@ public class UserDaoImpl implements UserDao{
     }
 
     @Override
+    @Transactional(readOnly = true)
     public User getById(int id) {
         TypedQuery<User> query = entityManager.createQuery("select u from User u where u.id=:id",User.class);
         query.setParameter("id", id);
@@ -57,6 +58,7 @@ public class UserDaoImpl implements UserDao{
     }
 
     @Override
+    @Transactional(readOnly = true)
     public User getByName(String name) {
         TypedQuery<User> query = entityManager.createQuery("select u from User u where u.name=:name" ,User.class);
         query.setParameter("name", name);

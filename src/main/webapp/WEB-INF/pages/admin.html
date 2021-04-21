@@ -21,7 +21,7 @@
         <td th:utext="${user.id}">Id</td>
         <td th:utext="${user.name}">Name</td>
         <td th:utext="${user.lastName}">Last Name</td>
-        <td th:utext="${user.roles}">Roles</td>
+        <td th:utext="${user.roles1}">Roles</td>
 
         <td><div sec:authorize="hasAnyAuthority('ADMIN')">
             <a th:href="@{/update/{id}(id=${user.id})}">Edit</a>

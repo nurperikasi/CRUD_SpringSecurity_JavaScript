@@ -88,9 +88,12 @@ public class User implements UserDetails {
         this.roles = roles;
     }
 
-    public void setRoles(String role) {
+    public void setRoles(String[] role) {
         Set<Role> roles = new HashSet<>();
-        roles.add(new Role(role));
+        for (String name: role) {
+            roles.add(new Role(name));
+        }
+
         this.roles = roles;
     }
 

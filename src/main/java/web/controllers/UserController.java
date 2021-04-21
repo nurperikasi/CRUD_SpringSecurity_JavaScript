@@ -4,6 +4,8 @@ package web.controllers;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import web.Dao.RoleDao;
+import web.models.Role;
 import web.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -13,11 +15,16 @@ import web.service.SecurityService;
 import web.service.UserService;
 import web.validator.UserValidator;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Controller
 @RequestMapping("/")
 public class UserController {
+
+    @Autowired
+    RoleDao roleDao;
 
     @Autowired
     private UserService userService;
@@ -58,15 +65,26 @@ public class UserController {
     public ModelAndView updatePage(@PathVariable("id") int id){
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("user", userService.getById(id));
+        modelAndView.addObject("roleList", userService.getAllRoles());
         modelAndView.setViewName("updatePage");
         return modelAndView;
     }
 
     @PostMapping("/update")
-    public  ModelAndView updateUser(@ModelAttribute("user") User user){
+    public  ModelAndView updateUser(@ModelAttribute("user") User user,
+                                    @RequestParam("roles")String [] roleList){
+
+        Set<Role> set = new HashSet<>();
+        if (roleList!=null){
+            for (int i =0; i<roleList.length; i++) {
+                if (!user.getRoles().contains(roleList[i])){
+                    set.add(roleDao.getByName(roleList[i]));
+                }
+            }
+            user.setRoles(set);
+        }
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("redirect:/admin");
-
         userService.update(user);
         return modelAndView;
     }
@@ -75,15 +93,27 @@ public class UserController {
     public ModelAndView addPage(){
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("user", new User());
+        modelAndView.addObject("roleList", userService.getAllRoles());
         modelAndView.setViewName("addPage");
         return modelAndView;
     }
 
     @PostMapping("/add")
-    public ModelAndView addUser(@ModelAttribute("user") User user){
+    public ModelAndView addUser(@ModelAttribute("user") User user,
+                                @RequestParam("roles")String [] roleList){
+
+        Set<Role> setForAdding = new HashSet<>();
+        if (roleList!=null){
+            for (int i =0; i<roleList.length; i++) {
+                if (!user.getRoles().contains(roleList[i])){
+                    setForAdding.add(roleDao.getByName(roleList[i]));
+                }
+            }
+            user.setRoles(setForAdding);
+        }
         ModelAndView modelAndView = new ModelAndView();
-        userService.add(user);
         modelAndView.setViewName("redirect:/admin");
+        userService.add(user);
         return modelAndView;
     }
 

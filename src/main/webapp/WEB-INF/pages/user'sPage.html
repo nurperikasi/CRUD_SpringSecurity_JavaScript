@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 <head>
     <meta charset="UTF-8">
     <title>User Page</title>
@@ -21,7 +22,11 @@
         <td th:utext="${user.getLastName()}">Last Name</td>
         <td th:utext="${user.getRoles1()}">Roles</td>
     </tr>
-<a href="#" th:href="@{/logout}">Log Out</a>
+
 </table>
+<a href="#" th:href="@{/logout}">Log Out</a>
+<div sec:authorize="hasAnyAuthority('ADMIN')">
+    <a href="/admin">Go to Admin Page</a>
+</div>
 </body>
 </html>

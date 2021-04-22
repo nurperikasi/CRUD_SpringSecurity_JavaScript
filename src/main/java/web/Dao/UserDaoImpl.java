@@ -1,30 +1,26 @@
 package web.Dao;
 
-import web.models.Role;
 import web.models.User;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
 import javax.persistence.TypedQuery;
-import javax.transaction.Transaction;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Queue;
-import java.util.Set;
 
 @Repository
 @Transactional
 public class UserDaoImpl implements UserDao{
 
-    @Autowired
-    RoleDao roleDao;
+    final RoleDao roleDao;
 
     @PersistenceContext
     EntityManager entityManager;
+
+    public UserDaoImpl(RoleDao roleDao) {
+        this.roleDao = roleDao;
+    }
 
     @Override
     @Transactional(readOnly = true)
@@ -34,9 +30,7 @@ public class UserDaoImpl implements UserDao{
 
     @Override
     public void add(User user) {
-        user.setPassword(user.getPassword());
-        user.setRoles(user.getRoles());
-        entityManager.persist(user);
+    entityManager.persist(user);
     }
 
     @Override

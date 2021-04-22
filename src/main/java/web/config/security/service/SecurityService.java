@@ -1,4 +1,4 @@
-package web.service;
+package web.config.security.service;
 
 public interface SecurityService {
     String findLoggedInUserName();

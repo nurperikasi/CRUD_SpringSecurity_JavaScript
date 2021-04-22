@@ -7,6 +7,7 @@ import web.models.Role;
 import web.models.User;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -14,25 +15,18 @@ import java.util.Set;
 @Service
 public class UserServiceImpl implements UserService{
 
-    @Autowired
-    RoleDao roleDao;
+    final RoleDao roleDao;
 
     final UserDao userDao;
 
-    public UserServiceImpl(UserDao userDao) {
+    public UserServiceImpl(UserDao userDao, RoleDao roleDao) {
         this.userDao = userDao;
+        this.roleDao = roleDao;
     }
 
     @Override
-    public Set<Role> getAllRoles() {
-        Set<Role> roles = new HashSet<>();
-        Role role1 = new Role("ADMIN");
-        role1.setId(56L);
-        roles.add(role1);
-        Role role2 = new Role("USER");
-        role2.setId(85l);
-        roles.add(role2);
-        return  roles;
+    public List<Role> getAllRoles() {
+        return  roleDao.getAllRoles();
     }
     @Override
     public List<User> allUsers() {
@@ -50,7 +44,16 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public void update(User user) {
+    public void update(User user, String[] roleList) {
+        List<Role> set = new ArrayList<>();
+        if (roleList != null){
+            for (int i =0; i<roleList.length; i++) {
+                if (!user.getRoles().contains(roleList[i])){
+                    set.add(roleDao.getByName(roleList[i]));
+                }
+            }
+            user.setRoles(set);
+        }
         userDao.update(user);
     }
 

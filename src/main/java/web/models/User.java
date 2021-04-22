@@ -5,8 +5,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -34,7 +33,7 @@ public class User implements UserDetails {
             joinColumns = { @JoinColumn(name = "user_id") },
             inverseJoinColumns = { @JoinColumn(name = "role_id") }
     )
-    private Set<Role> roles;
+    private List<Role> roles;
 
     public User() {
     }
@@ -76,7 +75,7 @@ public class User implements UserDetails {
         this.confirmPassword = confirmPassword;
     }
 
-    public Set<Role> getRoles() {
+    public List<Role> getRoles() {
         return roles;
     }
 
@@ -84,16 +83,7 @@ public class User implements UserDetails {
         return roles.toString().replace("[", "").replace("]", "");
     }
 
-    public void setRoles(Set<Role> roles) {
-        this.roles = roles;
-    }
-
-    public void setRoles(String[] role) {
-        Set<Role> roles = new HashSet<>();
-        for (String name: role) {
-            roles.add(new Role(name));
-        }
-
+    public void setRoles(List<Role> roles) {
         this.roles = roles;
     }
 

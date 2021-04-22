@@ -7,6 +7,7 @@ import web.models.Role;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
+import java.util.List;
 import java.util.Set;
 
 @Repository
@@ -15,6 +16,10 @@ public class RoleDaoImpl implements RoleDao {
 
     @PersistenceContext
     EntityManager entityManager;
+
+    public List<Role> getAllRoles() {
+        return entityManager.createQuery("select r from Role r", Role.class).getResultList();
+    }
 
     public  void add(Role role) {
         entityManager.merge(role);

@@ -1,10 +1,9 @@
-package web.service;
+package web.config.security.service;
 
 import org.springframework.stereotype.Service;
 import web.Dao.UserDao;
 import web.models.Role;
 import web.models.User;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,8 +16,11 @@ import java.util.Set;
 @Service
 public class UserDetailServiceImpl implements UserDetailsService {
 
-    @Autowired
-    UserDao userDao;
+    final UserDao userDao;
+
+    public UserDetailServiceImpl(UserDao userDao) {
+        this.userDao = userDao;
+    }
 
     @Override
     public UserDetails loadUserByUsername(String name) throws UsernameNotFoundException {

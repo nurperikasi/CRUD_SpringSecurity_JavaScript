@@ -1,4 +1,4 @@
-package web.Main;
+package web.SpringBootApplication;
 
 
 import org.springframework.boot.SpringApplication;

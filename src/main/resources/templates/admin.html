@@ -33,6 +33,9 @@
 <div sec:authorize="hasAnyAuthority('ADMIN')">
 <a href="/addPage">Add new user</a>
 </div>
+<div sec:authorize="hasAnyAuthority('USER')">
+    <a href="/user">My Page</a>
+</div>
 <a href="#" th:href="@{/logout}">Log Out</a>
 </body>
 </html>

@@ -4,15 +4,24 @@
     <facet type="web" name="Web">
       <configuration>
         <descriptors>
-          <deploymentDescriptor name="web.xml" url="file://$MODULE_DIR$/src/main/java/web" />
+          <deploymentDescriptor name="web.xml" url="file://$MODULE_DIR$/web/WEB-INF/web.xml" />
         </descriptors>
         <webroots>
-          <root url="file://$MODULE_DIR$/src/main/webapp" relative="/" />
+          <root url="file://$MODULE_DIR$/src/main/resources/templates" relative="/" />
         </webroots>
       </configuration>
     </facet>
     <facet type="Spring" name="Spring">
-      <configuration />
+      <configuration>
+        <fileset id="initializer web.config.AppInit servlet context" name="MVC dispatcher initializer servlet context" removed="true">
+          <dependency>initializer web.config.AppInit root context</dependency>
+          <file>file://$MODULE_DIR$/src/main/java/web/config/WebConfig.java</file>
+        </fileset>
+        <fileset id="fileset" name="Spring Application Context" removed="false">
+          <file>file://$MODULE_DIR$/src/main/java/web/config/security/SecurityConfig.java</file>
+          <file>file://$MODULE_DIR$/src/main/java/web/config/Main/SpringBootApplication.java</file>
+        </fileset>
+      </configuration>
     </facet>
     <facet type="jpa" name="JPA">
       <configuration>

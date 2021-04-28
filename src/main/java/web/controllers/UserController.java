@@ -11,13 +11,13 @@ import org.springframework.web.servlet.ModelAndView;
 import web.service.UserService;
 
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/")
 public class UserController {
 
-    final
-    RoleDao roleDao;
+    private final RoleDao roleDao;
 
     private final UserService userService;
 
@@ -31,12 +31,22 @@ public class UserController {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("admin");
 
+//        getting current user
         Authentication loggedInUser = SecurityContextHolder.getContext().getAuthentication();
         String username = loggedInUser.getName();
-        modelAndView.addObject("user", userService.getByName(username));
+        modelAndView.addObject("loggedInUserName", username);
+
+//        For all roles list
+        modelAndView.addObject("AllRolesList", userService.getAllRoles());
+
+//        for new user
+        modelAndView.addObject("newUser", new User());
 
         List<User> list = userService.allUsers();
         modelAndView.addObject("allUsers", list);
+
+//        for current users roles
+        modelAndView.addObject("userRoles", userService.getByName(username).getRoles1());
         return modelAndView;
     }
 
@@ -52,32 +62,20 @@ public class UserController {
         return modelAndView;
     }
 
-    @GetMapping("/update/{id}")
-    public ModelAndView updatePage(@PathVariable("id") int id){
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.addObject("user", userService.getById(id));
-        modelAndView.addObject("roleList", userService.getAllRoles());
-        modelAndView.setViewName("updatePage");
-        return modelAndView;
+    @RequestMapping("/getUser/{id}")
+    @ResponseBody
+    public Optional<User> updatePage(@PathVariable("id") int id){
+        return Optional.ofNullable(userService.getById(id));
     }
 
-    @PostMapping("/update")
-    public  ModelAndView updateUser(@ModelAttribute("user") User user,
-                                    @RequestParam(value = "roles", required = false)String [] roleList){
+   @RequestMapping(value = "/update", method = {RequestMethod.PUT, RequestMethod.GET, RequestMethod.POST} )
+    public  ModelAndView updateUser(@ModelAttribute("user") User user){
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("redirect:/admin");
-        userService.update(user, roleList);
+        userService.update(user);
         return modelAndView;
     }
 
-    @GetMapping("/addPage")
-    public ModelAndView addPage(){
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.addObject("user", new User());
-        modelAndView.addObject("roleList", userService.getAllRoles());
-        modelAndView.setViewName("addPage");
-        return modelAndView;
-    }
 
     @PostMapping("/add")
     public ModelAndView addUser(@ModelAttribute("user") User user){
@@ -87,10 +85,10 @@ public class UserController {
         return modelAndView;
     }
 
-    @GetMapping("/delete/{id}")
-    public ModelAndView deleteUser(@PathVariable("id") int id){
+
+    @RequestMapping(value = "/delete", method = {RequestMethod.PUT, RequestMethod.GET, RequestMethod.POST} )
+    public ModelAndView deleteUser(@ModelAttribute("user") User user){
         ModelAndView modelAndView = new ModelAndView();
-        User user = userService.getById(id);
         userService.delete(user);
         modelAndView.setViewName("redirect:/admin");
         return modelAndView;

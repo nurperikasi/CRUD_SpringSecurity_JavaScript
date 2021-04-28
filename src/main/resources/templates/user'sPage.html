@@ -1,32 +1,89 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">>
 <head>
     <meta charset="UTF-8">
-    <title>User Page</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <title>Admin</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 </head>
 <body>
-<h1>Welcome!</h1>
-<h1 th:utext="${user.getUsername()}"> </h1>
-<table border="1">
 
-    <tr>
-        <th>Id</th>
-        <th>Name</th>
-        <th>Last Name</th>
-        <th>Roles</th>
-    </tr>
-    <tr>
-        <td th:utext="${user.getId()}">Id</td>
-        <td th:utext="${user.getUsername()}">Name</td>
-        <td th:utext="${user.getLastName()}">Last Name</td>
-        <td th:utext="${user.getRoles1()}">Roles</td>
-    </tr>
+<nav class="navbar navbar-expand-md navbar-dark bg-dark mb-3">
+    <div class="container-fluid">
+        <p class="navbar-brand" th:utext="${user.getName()}">
+            <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+        </p>
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+            <div class="navbar-nav">
+                <p class="navbar-brand">&emsp; With roles &emsp;</p>
+                <p class="navbar-brand" th:utext="${user.roles1}">
+            </div>
+            <div class="navbar-nav ml-auto">
+                <a th:href="@{/logout}" class="nav-item nav-link">Logout</a>
+            </div>
+        </div>
+    </div>
+</nav>
 
-</table>
-<a href="#" th:href="@{/logout}">Log Out</a>
-<div sec:authorize="hasAnyAuthority('ADMIN')">
-    <a href="/admin">Go to Admin Page</a>
+<div class="container-fluid h-100">
+    <div class="row h-100">
+
+        <!--        side panel    -->
+
+        <aside class="col-12 col-md-2 bg-light">
+            <nav class="navbar navbar-expand navbar-light bg-light flex-md-column flex-row">
+                <div class="collapse navbar-collapse">
+                    <ul class="flex-md-column flex-row navbar-nav w-100 justify-content-between">
+                        <li class="nav-item">
+                            <div sec:authorize="hasAnyAuthority('ADMIN')">
+                                <nav class="navbar navbar-light bg-light">
+                                    <a class="nav-link" href="/admin">Admin </a>
+                                </nav>
+                            </div>
+                            <nav class="navbar navbar-light bg-light">
+                                <a class="nav-link active" href="/user">User <span class="sr-only">(current)</span></a>
+                            </nav>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </aside>
+
+<!--        main container-->
+
+        <main class="col h-100">
+            <h2 class="text-center font-weight-light">User information-page</h2>
+            <div class="tab-content" id="myTabContent">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th scope="col">Id</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Last Name</th>
+                        <th scope="col">Roles</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td th:utext="${user.id}">Id</td>
+                        <td th:utext="${user.name}">Name</td>
+                        <td th:utext="${user.lastName}">Last Name</td>
+                        <td th:utext="${user.roles1}">Roles</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
 </div>
+
+<script src="https://code.jquery.com/jquery-3.1.1.min.js" ></script>
+<script type="text/javascript" src="webjars/bootstrap/4.6.0/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+
 </body>
 </html>

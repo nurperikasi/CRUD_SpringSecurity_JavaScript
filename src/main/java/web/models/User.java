@@ -80,7 +80,7 @@ public class User implements UserDetails {
     }
 
     public String getRoles1() {
-        return roles.toString().replace("[", "").replace("]", "");
+        return roles.toString().replace("[" ,"").replace("]", "");
     }
 
     public void setRoles(List<Role> roles) {

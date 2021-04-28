@@ -8,19 +8,28 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.crypto.password.NoOpPasswordEncoder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.thymeleaf.extras.springsecurity4.dialect.SpringSecurityDialect;
+import org.thymeleaf.spring5.SpringTemplateEngine;
+import org.thymeleaf.spring5.templateresolver.SpringResourceTemplateResolver;
+import org.thymeleaf.spring5.view.ThymeleafViewResolver;
+import org.thymeleaf.templatemode.TemplateMode;
+
+import javax.sql.DataSource;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
+    private final DataSource datasourse;
     private final UserDetailsService userDetailsService; // сервис, с помощью которого тащим пользователя
     private final LoginSuccessHandler loginSuccessHandler; // класс, в котором описана логика перенаправления пользователей по ролям
 
     public SecurityConfig(@Qualifier("userDetailServiceImpl") UserDetailsService userDetailsService,
-                          LoginSuccessHandler loginSuccessHandler) {
+                          LoginSuccessHandler loginSuccessHandler, DataSource datasourse) {
         this.userDetailsService = userDetailsService;
         this.loginSuccessHandler = loginSuccessHandler;
+        this.datasourse = datasourse;
     }
 
     @Override
@@ -45,9 +54,36 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.headers().frameOptions().disable();
 
     }
+    @Bean
+    public SpringTemplateEngine templateEngine() {
+        SpringTemplateEngine templateEngine = new SpringTemplateEngine();
+        templateEngine.setTemplateResolver(thymeleafTemplateResolver());
+        templateEngine.setEnableSpringELCompiler(true);
+        templateEngine.addDialect(new SpringSecurityDialect());
+        return templateEngine;
+    }
 
     @Bean
-    public static NoOpPasswordEncoder passwordEncoder() {
-        return (NoOpPasswordEncoder) NoOpPasswordEncoder.getInstance();
+    public SpringResourceTemplateResolver thymeleafTemplateResolver() {
+        SpringResourceTemplateResolver templateResolver = new SpringResourceTemplateResolver();
+        templateResolver.setPrefix("classpath:templates/");
+        templateResolver.setSuffix(".html");
+        templateResolver.setCacheable(false);
+        templateResolver.setTemplateMode(TemplateMode.HTML);
+        return templateResolver;
+    }
+
+    @Bean
+    public ThymeleafViewResolver thymeleafViewResolver() {
+        ThymeleafViewResolver viewResolver = new ThymeleafViewResolver();
+        viewResolver.setTemplateEngine(templateEngine());
+        viewResolver.setCharacterEncoding("UTF-8");
+        return viewResolver;
+    }
+
+
+    @Bean
+    protected BCryptPasswordEncoder passwordEncoder(){
+        return  new BCryptPasswordEncoder();
     }
 }

@@ -1,6 +1,7 @@
-package web.config.security.service;
+package web.service;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import web.Dao.UserDao;
 import web.models.Role;
 import web.models.User;
@@ -16,12 +17,13 @@ import java.util.Set;
 @Service
 public class UserDetailServiceImpl implements UserDetailsService {
 
-    final UserDao userDao;
+    private final UserDao userDao;
 
     public UserDetailServiceImpl(UserDao userDao) {
         this.userDao = userDao;
     }
 
+    @Transactional
     @Override
     public UserDetails loadUserByUsername(String name) throws UsernameNotFoundException {
         User user = userDao.getByName(name);
@@ -29,7 +31,6 @@ public class UserDetailServiceImpl implements UserDetailsService {
         for(Role role: user.getRoles()) {
             grantedAuthorities.add(new SimpleGrantedAuthority(role.getRole()));
         }
-
         return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), grantedAuthorities);
     }
 }

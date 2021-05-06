@@ -11,7 +11,7 @@
     <root id="root">
       <element id="directory" name="WEB-INF">
         <element id="directory" name="classes">
-          <element id="module-output" name="Bootstrap_CRUD_SpringSecurity_JavaScript" />
+          <element id="module-output" name="CRUD_SpringSecurity" />
         </element>
         <element id="directory" name="lib">
           <element id="library" level="project" name="Maven: org.springframework.boot:spring-boot-starter-thymeleaf:2.4.4" />
@@ -99,7 +99,7 @@
       <element id="directory" name="META-INF">
         <element id="file-copy" path="$PROJECT_DIR$/target/CRUD_SpringSecurity/META-INF/MANIFEST.MF" />
       </element>
-      <element id="javaee-facet-resources" facet="Bootstrap_CRUD_SpringSecurity_JavaScript/web/Web" />
+      <element id="javaee-facet-resources" facet="CRUD_SpringSecurity/web/Web" />
     </root>
   </artifact>
 </component>

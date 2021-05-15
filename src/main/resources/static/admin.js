@@ -97,9 +97,7 @@ function updateFormWriter(td) {
                     $('#editPassword').val(data.password)
                     $('#editModalPage').modal();
                 })
-
         })
-
 }
 
 function readEditForm() {
@@ -138,6 +136,11 @@ function putUser() {
 function closeEditModal() {
     $('#editModalPage').modal('hide');
 }
+
+function clearEditModal() {
+    $('#editModalPage')[0].reset();
+}
+
 
 //Delete methods
 

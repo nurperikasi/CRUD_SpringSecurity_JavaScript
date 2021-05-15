@@ -8,7 +8,6 @@ import org.springframework.web.servlet.ModelAndView;
 import web.service.UserService;
 
 @Controller
-@RequestMapping("/")
 public class UserController {
 
     private final UserService userService;
@@ -46,5 +45,4 @@ public class UserController {
         modelAndView.setViewName("user'sPage");
         return modelAndView;
     }
-
 }

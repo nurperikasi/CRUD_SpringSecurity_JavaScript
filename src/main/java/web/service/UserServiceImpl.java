@@ -47,12 +47,10 @@ public class UserServiceImpl implements UserService{
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userDao.add(user);
         user1 = userDao.getByName(user.getName());
-        System.out.println(user1+"1");
     }
 
     @Override
     public User addedUser(){
-        System.out.println(user1+"2");
         return user1;
     }
 

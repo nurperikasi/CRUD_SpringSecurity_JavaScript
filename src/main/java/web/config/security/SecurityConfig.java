@@ -22,8 +22,8 @@ import javax.sql.DataSource;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final DataSource datasourse;
-    private final UserDetailsService userDetailsService; // сервис, с помощью которого тащим пользователя
-    private final LoginSuccessHandler loginSuccessHandler; // класс, в котором описана логика перенаправления пользователей по ролям
+    private final UserDetailsService userDetailsService;
+    private final LoginSuccessHandler loginSuccessHandler;
 
     public SecurityConfig(@Qualifier("userDetailServiceImpl") UserDetailsService userDetailsService,
                           LoginSuccessHandler loginSuccessHandler, DataSource datasourse) {
@@ -47,8 +47,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .anyRequest().authenticated()
                 .and().formLogin().permitAll()
                 .successHandler(loginSuccessHandler)
-                .and().logout().permitAll()
-                .and().exceptionHandling().accessDeniedPage("/403");
+                .and().logout().permitAll();
 
         http.csrf().disable();
         http.headers().frameOptions().disable();

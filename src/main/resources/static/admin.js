@@ -81,7 +81,12 @@ function addNewRow() {
 
 function clearAddForm() {
     $('#addForm')[0].reset();
-}
+};
+
+function  openTablePage() {
+    $('.nav-tabs a[href="#home"]').tab('show');
+};
+
 
 
 //Edit methods
@@ -94,7 +99,6 @@ function updateFormWriter(td) {
                     $('#editId').val(data.id)
                     $('#editName').val(data.name)
                     $('#editLastName').val(data.lastName)
-                    $('#editPassword').val(data.password)
                     $('#editModalPage').modal();
                 })
         })
@@ -152,7 +156,6 @@ function deleteFormWriter(id) {
                     $('#deleteId').val(data.id)
                     $('#deleteName').val(data.name)
                     $('#deleteLastName').val(data.lastName)
-                    $('#deletePassword').val(data.password)
                     $('#deleteModalPage').modal();
                 })
 

@@ -21,7 +21,6 @@ import javax.sql.DataSource;
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private final DataSource datasourse;
     private final UserDetailsService userDetailsService;
     private final LoginSuccessHandler loginSuccessHandler;
 
@@ -29,7 +28,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                           LoginSuccessHandler loginSuccessHandler, DataSource datasourse) {
         this.userDetailsService = userDetailsService;
         this.loginSuccessHandler = loginSuccessHandler;
-        this.datasourse = datasourse;
     }
 
     @Override
@@ -42,8 +40,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers("/user").hasAnyAuthority("USER", "ADMIN")
                 .antMatchers("/admin").hasAnyAuthority("ADMIN")
+                .antMatchers("/user").hasAnyAuthority("USER", "ADMIN")
                 .anyRequest().authenticated()
                 .and().formLogin().permitAll()
                 .successHandler(loginSuccessHandler)

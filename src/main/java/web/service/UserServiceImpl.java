@@ -43,7 +43,11 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public void add(User user) {
-
+        List<Role> list = new ArrayList();
+        for (Role role : user.getRoles()) {
+            list.add(roleDao.getByName(role.getRole()));
+        }
+        user.setRoles(list);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userDao.add(user);
         user1 = userDao.getByName(user.getName());
@@ -56,11 +60,18 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public void delete(User user) {
+        List<Role> list = new ArrayList<>();
+        user.setRoles(list);
         userDao.delete(user);
     }
 
     @Override
     public void update(User user) {
+        List<Role> list = new ArrayList();
+        for (Role role : user.getRoles()) {
+            list.add(roleDao.getByName(role.getRole()));
+        }
+        user.setRoles(list);
         if (!userDao.getById(user.getId()).getPassword().equals(user.getPassword())) {
             user.setPassword(passwordEncoder.encode(user.getPassword()));
         }
